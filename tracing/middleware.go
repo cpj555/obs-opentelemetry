@@ -83,6 +83,9 @@ func ClientMiddleware(opts ...Option) client.Middleware {
 			)
 			defer span.End()
 
+			if !span.IsRecording() {
+				return next(ctx, req, resp)
+			}
 			// inject client service resource attributes (canonical service) to meta map
 			md := injectPeerServiceToMetadata(ctx, span.(trace.ReadOnlySpan).Resource().Attributes())
 
